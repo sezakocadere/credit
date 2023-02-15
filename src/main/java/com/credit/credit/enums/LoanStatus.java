@@ -1,6 +1,6 @@
 package com.credit.credit.enums;
 
-public enum CreditStatus {
+public enum LoanStatus {
     APPROVED,
     DENIED
 }

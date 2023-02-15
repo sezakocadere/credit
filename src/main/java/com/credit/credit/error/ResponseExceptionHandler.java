@@ -25,6 +25,6 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundObject.class)
     public ResponseEntity<Object> handleNotFound(NotFoundObject ex, WebRequest request) {
-        return new ResponseEntity<>(new ApiError(ex.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiError(ex.getMessage(), HttpStatus.NOT_FOUND, String.valueOf(LocalDateTime.now())), HttpStatus.NOT_FOUND);
     }
 }

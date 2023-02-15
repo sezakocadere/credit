@@ -1,9 +1,9 @@
-package com.credit.credit.service;
+package com.credit.credit.service.customer;
 
 import com.credit.credit.enums.Status;
 import com.credit.credit.error.NotFoundObject;
 import com.credit.credit.model.Customer;
-import com.credit.credit.model.CustomerDTO;
+import com.credit.credit.model.RequestCustomerDTO;
 import com.credit.credit.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public Customer createCustomer(CustomerDTO customerDTO) {
+    public Customer createCustomer(RequestCustomerDTO customerDTO) {
         ModelMapper modelMapper = new ModelMapper();
         Customer customer = modelMapper.map(customerDTO, Customer.class);
         customer.setStatus(Status.ACTIVE);
@@ -51,12 +51,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public Customer updateCustomer(Long id, CustomerDTO customerDTO) {
+    public Customer updateCustomer(Long id, RequestCustomerDTO customerDTO) {
         Customer customer = getCustomer(id);
         customer.setName(customerDTO.getName());
         customer.setSurname(customerDTO.getSurname());
         customer.setTckn(customerDTO.getTckn());
-        customer.setBirthDate(customerDTO.getBirthDate());
+        customer.setBirthDate(String.valueOf(customerDTO.getBirthDate()));
         customer.setPhoneNumber(customerDTO.getPhoneNumber());
         customer.setSalary(customerDTO.getSalary());
         customer.setGuaranteeAmount(customerDTO.getGuaranteeAmount());
@@ -64,6 +64,11 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setGuarantee(true);
         }
         return customer;
+    }
+
+    @Override
+    public Customer getCustomerByTckn(String tckn) {
+        return customerRepository.findByTckn(tckn);
     }
 
     private Customer getCustomer(Long id) {

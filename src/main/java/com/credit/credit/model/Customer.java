@@ -3,11 +3,12 @@ package com.credit.credit.model;
 import com.credit.credit.enums.Status;
 import lombok.Data;
 
+import org.modelmapper.ModelMapper;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -19,9 +20,13 @@ public class Customer {
     private String surname;
     private String tckn;
     private String phoneNumber;
-    private LocalDate birthDate;
+    private String birthDate;
     private BigDecimal salary;
     private Status status;
     private boolean guarantee;
     private BigDecimal guaranteeAmount;
+
+    public CustomerDTO toDTO() {
+        return new ModelMapper().map(this, CustomerDTO.class);
+    }
 }

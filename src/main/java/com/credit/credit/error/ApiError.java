@@ -8,5 +8,9 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public record ApiError(String message, HttpStatus status, LocalDateTime timeStamp) {
+public class ApiError {
+    private final String message;
+    private final HttpStatus status;
+    private final String timeStamp;
+
 }
