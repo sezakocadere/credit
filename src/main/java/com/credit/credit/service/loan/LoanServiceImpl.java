@@ -50,7 +50,7 @@ public class LoanServiceImpl implements LoanService {
         loan.setCustomer(customer);
         int loanScore = findLoanScore();
         loan.setLoanScore(loanScore);
-        loan.setApplyDate(OffsetDateTime.now().toString());
+        loan.setApplyDate(String.valueOf(OffsetDateTime.now()));
 
         BigDecimal salary = customer.getSalary();
         if (loanScore < LOAN_SCORE_LIMIT) {

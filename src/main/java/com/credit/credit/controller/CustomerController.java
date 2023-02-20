@@ -27,13 +27,13 @@ public class CustomerController {
 
     @PutMapping(value = "/{customerId}")
     public CustomerDTO putCostumer(
-            @PathVariable("customerId") Long id, @RequestBody RequestCustomerDTO request) {
-        return costumerService.updateCustomer(id, request).toDTO();
+            @PathVariable Long customerId, @RequestBody RequestCustomerDTO request) {
+        return costumerService.updateCustomer(customerId, request).toDTO();
     }
 
     @DeleteMapping(value = "/{customerId}")
     public void deleteCostumer(
-            @PathVariable("customerId") Long id) {
-        costumerService.removeCustomer(id);
+            @PathVariable Long customerId) {
+        costumerService.removeCustomer(customerId);
     }
 }
