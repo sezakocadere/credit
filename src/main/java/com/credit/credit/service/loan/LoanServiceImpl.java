@@ -35,7 +35,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public Loan getLoanByTcknAndBirthdate(String tckn, String birthDate) {
-        Loan loan = loanRepository.findFirstByCustomerTcknAndCustomerBirthDateAllIgnoreCase(tckn, birthDate);
+        Loan loan = loanRepository.findFirstByCustomerTcknAndCustomerBirthDateOrderByApplyDateDesc(tckn, birthDate);
         if (loan == null) {
             throw new NotFoundObject("Customer / Loan  Not Found");
         }
@@ -50,7 +50,7 @@ public class LoanServiceImpl implements LoanService {
         loan.setCustomer(customer);
         int loanScore = findLoanScore();
         loan.setLoanScore(loanScore);
-        loan.setApplyDate(OffsetDateTime.now());
+        loan.setApplyDate(OffsetDateTime.now().toString());
 
         BigDecimal salary = customer.getSalary();
         if (loanScore < LOAN_SCORE_LIMIT) {

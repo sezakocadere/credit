@@ -20,7 +20,7 @@ public class Loan {
     private LoanStatus loanStatus;
     private int loanScore;
     private BigDecimal loanLimit;
-    private OffsetDateTime applyDate;
+    private String applyDate;
     @ManyToOne
     private Customer customer;
 
