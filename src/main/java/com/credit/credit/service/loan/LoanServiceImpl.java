@@ -8,15 +8,18 @@ import com.credit.credit.model.Loan;
 import com.credit.credit.repository.LoanRepository;
 import com.credit.credit.service.customer.CustomerService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 @AllArgsConstructor
 @Service
+@Log4j2
 public class LoanServiceImpl implements LoanService {
     private static final BigDecimal MINIMUM_SALARY = BigDecimal.valueOf(5000);
     private static final BigDecimal MAX_SALARY = BigDecimal.valueOf(10000);
@@ -36,10 +39,9 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Loan getLoanByTcknAndBirthdate(String tckn, String birthDate) {
         Loan loan = loanRepository.findFirstByCustomerTcknAndCustomerBirthDateOrderByApplyDateDesc(tckn, birthDate);
-        if (loan == null) {
+        if (Objects.isNull(loan)) {
             throw new NotFoundObject("Customer / Loan  Not Found");
         }
-
         return loan;
     }
 
@@ -82,7 +84,7 @@ public class LoanServiceImpl implements LoanService {
 
     Customer findCustomer(String tckn) {
         Customer customer = customerService.getCustomerByTckn(tckn);
-        if (customer == null || customer.getStatus().equals(Status.PASSIVE)) {
+        if (Objects.isNull(customer) || customer.getStatus().equals(Status.PASSIVE)) {
             throw new NotFoundObject("Customer Not Found");
         }
         return customer;

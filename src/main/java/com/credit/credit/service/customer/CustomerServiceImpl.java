@@ -6,15 +6,18 @@ import com.credit.credit.model.Customer;
 import com.credit.credit.model.RequestCustomerDTO;
 import com.credit.credit.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
+@Log4j2
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
 
@@ -60,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPhoneNumber(customerDTO.getPhoneNumber());
         customer.setSalary(customerDTO.getSalary());
         customer.setGuaranteeAmount(customerDTO.getGuaranteeAmount());
-        if (customer.getGuaranteeAmount().compareTo(BigDecimal.ZERO) > 0) {
+        if (Objects.nonNull(customer.getGuaranteeAmount()) && customer.getGuaranteeAmount().compareTo(BigDecimal.ZERO) > 0) {
             customer.setGuarantee(true);
         }
         return customer;
@@ -68,11 +71,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer getCustomerByTckn(String tckn) {
-        return customerRepository.findByTckn(tckn);
+        Customer customer = customerRepository.findByTckn(tckn);
+        if (Objects.isNull(customer)) {
+            throw new NotFoundObject("Customer Not Found");
+        }
+        return customer;
     }
 
     private Customer getCustomer(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new NotFoundObject("Customer Not Found"));
-        return customer;
+        return customerRepository.findById(id).orElseThrow(() -> new NotFoundObject("Customer Not Found"));
     }
 }
