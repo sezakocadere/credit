@@ -79,12 +79,14 @@ public class LoanServiceImpl implements LoanService {
         }
         loan.setLoanStatus(LoanStatus.APPROVED);
         loanRepository.save(loan);
+        log.info("Loan is calculated! : " + loan);
         return loan;
     }
 
     Customer findCustomer(String tckn) {
         Customer customer = customerService.getCustomerByTckn(tckn);
         if (Objects.isNull(customer) || customer.getStatus().equals(Status.PASSIVE)) {
+            log.error("Customer Not Found");
             throw new NotFoundObject("Customer Not Found");
         }
         return customer;

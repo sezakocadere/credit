@@ -40,6 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
         customer.setStatus(Status.ACTIVE);
         customerRepository.save(customer);
+        log.info("Customer is created!");
         return customer;
     }
 
@@ -73,6 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomerByTckn(String tckn) {
         Customer customer = customerRepository.findByTckn(tckn);
         if (Objects.isNull(customer)) {
+            log.error("Customer Not Found");
             throw new NotFoundObject("Customer Not Found");
         }
         return customer;
