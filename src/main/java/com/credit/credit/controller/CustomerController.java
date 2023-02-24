@@ -7,6 +7,7 @@ import com.credit.credit.service.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,13 +27,13 @@ public class CustomerController {
     }
 
     @PostMapping
-    public CustomerDTO postCostumer(@RequestBody RequestCustomerDTO request) {
+    public CustomerDTO postCostumer(@Valid @RequestBody RequestCustomerDTO request) {
         return costumerService.createCustomer(request).toDTO();
     }
 
     @PutMapping(value = "/{customerId}")
     public CustomerDTO putCostumer(
-            @PathVariable Long customerId, @RequestBody RequestCustomerDTO request) {
+            @PathVariable Long customerId, @Valid @RequestBody RequestCustomerDTO request) {
         return costumerService.updateCustomer(customerId, request).toDTO();
     }
 

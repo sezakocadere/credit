@@ -39,6 +39,9 @@ public class CustomerServiceImpl implements CustomerService {
         ModelMapper modelMapper = new ModelMapper();
         Customer customer = modelMapper.map(customerDTO, Customer.class);
         customer.setStatus(Status.ACTIVE);
+        if (Objects.nonNull(customer.getGuaranteeAmount()) && customer.getGuaranteeAmount().compareTo(BigDecimal.ZERO) > 0) {
+            customer.setGuarantee(true);
+        }
         customerRepository.save(customer);
         log.info("Customer is created!");
         return customer;

@@ -28,10 +28,8 @@ public class LoanServiceImplTest {
     public final JUnitSoftAssertions softly = new JUnitSoftAssertions();
     @Rule
     public final ExpectedException exp = ExpectedException.none();
-
     @Mock
     private LoanRepository loanRepository;
-
     @Mock
     private CustomerService customerService;
     @Mock

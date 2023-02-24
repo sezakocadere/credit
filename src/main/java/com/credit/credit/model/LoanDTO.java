@@ -2,6 +2,7 @@ package com.credit.credit.model;
 
 import com.credit.credit.enums.LoanStatus;
 import lombok.Data;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
+@Audited
 public class LoanDTO {
     @Id
     @GeneratedValue
