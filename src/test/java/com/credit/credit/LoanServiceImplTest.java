@@ -9,6 +9,7 @@ import com.credit.credit.repository.LoanRepository;
 import com.credit.credit.service.customer.CustomerService;
 import com.credit.credit.service.loan.LoanService;
 import com.credit.credit.service.loan.LoanServiceImpl;
+import com.credit.credit.service.sms.SmsService;
 import org.assertj.core.api.JUnitSoftAssertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,6 +31,8 @@ public class LoanServiceImplTest {
     @Rule
     public final ExpectedException exp = ExpectedException.none();
     @Mock
+    SmsService smsService;
+    @Mock
     private LoanRepository loanRepository;
     @Mock
     private CustomerService customerService;
@@ -38,7 +41,7 @@ public class LoanServiceImplTest {
 
     @Before
     public void setup() {
-        loanService = new LoanServiceImpl(loanRepository, customerService);
+        loanService = new LoanServiceImpl(loanRepository, customerService, smsService);
     }
 
     @Test
@@ -70,6 +73,8 @@ public class LoanServiceImplTest {
         // Arrange
         Customer customer = createCustomer();
         when(customerService.getCustomerByTcknAndStatus(customer.getTckn(), Status.ACTIVE)).thenReturn(customer);
+        when(smsService.sendSmsMessageByLoanStatus(createLoan().getLoanStatus())).thenReturn(String.valueOf(Status.ACTIVE));
+
 
         // Act
         Loan responseLoan = loanService.calculateLoanInfo(customer.getTckn());
