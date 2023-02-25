@@ -74,13 +74,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerByTckn(String tckn) {
-        Customer customer = customerRepository.findByTckn(tckn);
-        if (Objects.isNull(customer)) {
-            log.error("Customer Not Found");
-            throw new NotFoundObject("Customer Not Found");
-        }
-        return customer;
+    public Customer getCustomerByTcknAndStatus(String tckn, Status status) {
+        return customerRepository.findByTckn(tckn).orElseThrow(() -> new NotFoundObject("Customer Not Found"));
     }
 
     private Customer getCustomer(Long id) {

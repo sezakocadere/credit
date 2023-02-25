@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -46,7 +47,7 @@ public class LoanServiceImplTest {
         Loan loan = createLoan();
         Customer customer = loan.getCustomer();
         when(loanRepository.findFirstByCustomerTcknAndCustomerBirthDateOrderByApplyDateDesc(
-                customer.getTckn(), customer.getBirthDate())).thenReturn(loan);
+                customer.getTckn(), customer.getBirthDate())).thenReturn(Optional.of(loan));
         // Act
         Loan responseLoan = loanService.getLoanByTcknAndBirthdate(customer.getTckn(), customer.getBirthDate());
         // Assert
@@ -57,7 +58,7 @@ public class LoanServiceImplTest {
     public void getLoanByTcknAndBirthdateByInvalidValue() {
         // Arrange
         when(loanRepository.findFirstByCustomerTcknAndCustomerBirthDateOrderByApplyDateDesc(
-                "123", "1995-05-20")).thenReturn(null);
+                "123", "1995-05-20")).thenThrow(new NotFoundObject("Not Found"));
         exp.expect(NotFoundObject.class);
 
         // Act
@@ -68,7 +69,7 @@ public class LoanServiceImplTest {
     public void calculateLoanInfo() {
         // Arrange
         Customer customer = createCustomer();
-        when(customerService.getCustomerByTckn(customer.getTckn())).thenReturn(customer);
+        when(customerService.getCustomerByTcknAndStatus(customer.getTckn(), Status.ACTIVE)).thenReturn(customer);
 
         // Act
         Loan responseLoan = loanService.calculateLoanInfo(customer.getTckn());

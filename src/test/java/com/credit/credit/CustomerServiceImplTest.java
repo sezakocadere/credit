@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +43,7 @@ public class CustomerServiceImplTest {
     public void getAllCustomers() {
         // Arrange
         Customer customer = createCustomer();
-        List<Customer> customers = Arrays.asList(customer);
+        List<Customer> customers = List.of(customer);
         when(customerRepository.findAll()).thenReturn(customers);
 
         // Act
@@ -78,13 +77,13 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void getCustomerByTckn() {
+    public void getCustomerByTcknAndStatus() {
         // Arrange
         Customer customer = createCustomer();
-        when(customerRepository.findByTckn(customer.getTckn())).thenReturn(customer);
+        when(customerRepository.findByTckn(customer.getTckn())).thenReturn(Optional.of(customer));
 
         // Act
-        Customer responseCustomer = customerService.getCustomerByTckn(customer.getTckn());
+        Customer responseCustomer = customerService.getCustomerByTcknAndStatus(customer.getTckn(), Status.ACTIVE);
 
         // Assert
         softly.assertThat(responseCustomer.getId()).isEqualTo(customer.getId());
@@ -92,10 +91,10 @@ public class CustomerServiceImplTest {
 
     @Test
     public void getCustomerByTcknByInvalidValue() {
-        when(customerRepository.findByTckn("12345678901")).thenReturn(null);
+        when(customerRepository.findByTckn("12345678901")).thenThrow(new NotFoundObject("Customer Not Found"));
         exp.expect(NotFoundObject.class);
 
-        customerService.getCustomerByTckn("12345678901");
+        customerService.getCustomerByTcknAndStatus("12345678901", Status.ACTIVE);
     }
 
     @Test
