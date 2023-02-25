@@ -7,6 +7,7 @@ import com.credit.credit.model.Customer;
 import com.credit.credit.model.Loan;
 import com.credit.credit.repository.LoanRepository;
 import com.credit.credit.service.customer.CustomerService;
+import com.credit.credit.service.sms.SmsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class LoanServiceImpl implements LoanService {
 
     private final LoanRepository loanRepository;
     private final CustomerService customerService;
+    private final SmsService smsService;
 
     private int findLoanScore() {
         return ThreadLocalRandom.current().nextInt(400, 1000 + 1);
@@ -62,12 +64,14 @@ public class LoanServiceImpl implements LoanService {
 
         if (loanScore < LOAN_SCORE_LIMIT) {
             loan.setLoanStatus(LoanStatus.DENIED);
+            new Thread(smsService.sendSmsMessageByLoanStatus(LoanStatus.DENIED)).run();
             return loan;
         }
         BigDecimal salary = customer.getSalary();
         loan.setLoanLimit(loanScore < LOAN_SCORE_MAX ? calculateLoanLimit(customer, salary) :
                 checkAndCalculateGuarantee(customer, salary.multiply(LOAN_LIMIT_PARAMETER), LOAN_RATE_FIFTY));
         loan.setLoanStatus(LoanStatus.APPROVED);
+        new Thread(smsService.sendSmsMessageByLoanStatus(loan.getLoanStatus())).run();
         return loan;
     }
 
