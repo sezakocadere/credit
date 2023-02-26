@@ -21,13 +21,15 @@ import java.util.Objects;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
 
-    @Transactional
     @Override
     public Customer getCustomerById(Long id) {
-        return getCustomer(id);
+        Customer customer = getCustomer(id);
+        if (customer.getStatus().equals(Status.PASSIVE)) {
+            throw new NotFoundObject("Customer Not Found");
+        }
+        return customer;
     }
 
-    @Transactional
     @Override
     public List<Customer> getAllCustomer() {
         return customerRepository.findAll();
@@ -50,7 +52,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public void removeCustomer(Long id) {
-        //add credit control
         Customer customer = getCustomer(id);
         customer.setStatus(Status.PASSIVE);
         customerRepository.save(customer);

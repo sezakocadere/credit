@@ -1,4 +1,4 @@
-/*package com.credit.credit.controller;
+package com.credit.credit.controller;
 
 import com.credit.credit.model.JwtResponse;
 import com.credit.credit.model.UserLoginRequest;
@@ -21,4 +21,3 @@ public class LoginController {
         return new JwtResponse(userLoginService.login(loginRequest));
     }
 }
-*/

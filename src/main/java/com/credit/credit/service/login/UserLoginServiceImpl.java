@@ -1,13 +1,11 @@
-/*package com.credit.credit.service.login;
+package com.credit.credit.service.login;
 
-import com.credit.credit.error.NotFoundObject;
-import com.credit.credit.model.Customer;
+import com.credit.credit.enums.Status;
 import com.credit.credit.model.UserLoginRequest;
-import com.credit.credit.repository.CustomerRepository;
+import com.credit.credit.service.customer.CustomerService;
 import com.credit.credit.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,18 +16,16 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class UserLoginServiceImpl implements UserLoginService {
     private final AuthenticationManager authenticationManager;
-    private final CustomerRepository customerRepository;
+
+    private final CustomerService customerService;
 
     @Override
     public String login(UserLoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken
-                (loginRequest.getTckn(), loginRequest.getPassword()));
-        return JwtTokenUtil.generateToken(getUserDetailsByTckn(loginRequest.getTckn(), loginRequest.getPassword()));
+        UserDetails userDetails = getUserDetailsByTckn(loginRequest.getTckn());
+        return JwtTokenUtil.generateToken(userDetails);
     }
 
-    private UserDetails getUserDetailsByTckn(String tckn, String password) {
-        Customer customer = customerRepository.findByTckn(tckn).orElseThrow((() -> new NotFoundObject("Customer Not Found")));
-        return new User(customer.getTckn(), password, new ArrayList<>());
+    private UserDetails getUserDetailsByTckn(String tckn) {
+        return new User(tckn, customerService.getCustomerByTcknAndStatus(tckn, Status.ACTIVE).getName(), new ArrayList<>());
     }
 }
-*/
