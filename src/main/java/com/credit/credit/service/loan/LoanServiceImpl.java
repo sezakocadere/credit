@@ -64,14 +64,14 @@ public class LoanServiceImpl implements LoanService {
 
         if (loanScore < LOAN_SCORE_LIMIT) {
             loan.setLoanStatus(LoanStatus.DENIED);
-            new Thread(smsService.sendSmsMessageByLoanStatus(LoanStatus.DENIED)).run();
+            new Thread(smsService.sendSmsMessageByLoanStatus(LoanStatus.DENIED, customer.getPhoneNumber())).run();
             return loan;
         }
         BigDecimal salary = customer.getSalary();
         loan.setLoanLimit(loanScore < LOAN_SCORE_MAX ? calculateLoanLimit(customer, salary) :
                 checkAndCalculateGuarantee(customer, salary.multiply(LOAN_LIMIT_PARAMETER), LOAN_RATE_FIFTY));
         loan.setLoanStatus(LoanStatus.APPROVED);
-        new Thread(smsService.sendSmsMessageByLoanStatus(loan.getLoanStatus())).run();
+        new Thread(smsService.sendSmsMessageByLoanStatus(loan.getLoanStatus(), customer.getPhoneNumber())).run();
         return loan;
     }
 

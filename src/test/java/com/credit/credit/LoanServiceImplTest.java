@@ -73,7 +73,7 @@ public class LoanServiceImplTest {
         // Arrange
         Customer customer = createCustomer();
         when(customerService.getCustomerByTcknAndStatus(customer.getTckn(), Status.ACTIVE)).thenReturn(customer);
-        when(smsService.sendSmsMessageByLoanStatus(createLoan().getLoanStatus())).thenReturn(String.valueOf(Status.ACTIVE));
+        when(smsService.sendSmsMessageByLoanStatus(createLoan().getLoanStatus(), customer.getPhoneNumber())).thenReturn(String.valueOf(Status.ACTIVE));
 
 
         // Act
@@ -91,6 +91,7 @@ public class LoanServiceImplTest {
         customer.setSurname("Kocadere");
         customer.setTckn("12345678901");
         customer.setBirthDate("1996-07-02");
+        customer.setPhoneNumber("5346571454");
         customer.setSalary(BigDecimal.valueOf(12500));
         customer.setStatus(Status.ACTIVE);
         return customer;
