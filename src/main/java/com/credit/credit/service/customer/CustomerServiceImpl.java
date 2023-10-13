@@ -60,6 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public Customer updateCustomer(Long id, RequestCustomerDTO customerDTO) {
+        //add something
         Customer customer = getCustomer(id);
         customer.setName(customerDTO.getName());
         customer.setSurname(customerDTO.getSurname());
